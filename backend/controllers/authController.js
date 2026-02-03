@@ -1,4 +1,5 @@
-import User from "../models/user.js";
+import user from "../models/user.js";
+import jwt from "jsonwebtoken";
 // register controller
 export const registerUser = async (req, res) => {
   try {
@@ -8,25 +9,34 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const userExists = await User.findOne({ email });
+    const userExists = await user.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
-    const user = await User.create({
+    const newUser = await user.create({
       name,
       email,
       password,
       role,
     });
 
+    // Generate JWT token
+    const jwtToken = newUser.generateAuthToken();
+    // Set token in cookie
+    res.cookie('token', jwtToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false, // Set to false for development
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
     res.status(201).json({
       success: true,
       message: "User registered successfully",
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
       },
     });
   } catch (error) {
@@ -41,24 +51,33 @@ export const loginUser = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const user = await User .findOne({ email }).select("+password");
-    if (!user) {
+    const existingUser = await user.findOne({ email }).select("+password");
+    if (!existingUser) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await existingUser.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    user.lastLogin = Date.now();
-    await user.save();
+    existingUser.lastLogin = Date.now();
+    await existingUser.save();
+    // Generate JWT token
+    const jwtToken = existingUser.generateAuthToken();
+    // Set token in cookie
+    res.cookie('token', jwtToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false, // Set to false for development
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
     res.status(200).json({
       success: true,
       message: "Login successful",
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email, 
-        role: user.role,
+        id: existingUser._id,
+        name: existingUser.name,
+        email: existingUser.email, 
+        role: existingUser.role,
       },
     });
   } catch (error) {

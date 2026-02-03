@@ -1,34 +1,16 @@
-import Ngo from "../models/Ngo.js";
+import NGO from "../models/Ngo.js";
 
-// CREATE NGO
+/* ================= CREATE NGO ================= */
 export const createNgo = async (req, res) => {
   try {
-    const {
-      name,
-      registrationNumber,
-      email,
-      phone,
-      address,
-      documents,
-    } = req.body;
-
-    if (!name || !registrationNumber || !email) {
-      return res.status(400).json({ message: "Required fields missing" });
-    }
-
-    const existingNgo = await Ngo.findOne({ registrationNumber });
-    if (existingNgo) {
+    const ngoExists = await NGO.findOne({ user: req.user._id });
+    if (ngoExists) {
       return res.status(400).json({ message: "NGO already exists" });
     }
 
-    const ngo = await Ngo.create({
-      name,
-      registrationNumber,
-      email,
-      phone,
-      address,
-      documents,
-      createdBy: req.user.id, // from auth middleware
+    const ngo = await NGO.create({
+      user: req.user._id,
+      ...req.body,
     });
 
     res.status(201).json({
@@ -42,12 +24,46 @@ export const createNgo = async (req, res) => {
   }
 };
 
-// GET ALL NGOs
-export const getAllNgos = async (req, res) => {
-  try {
-    const ngos = await Ngo.find().populate("createdBy", "name email role");
-    res.json(ngos);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+/* ================= GET MY NGO ================= */
+export const getMyNgo = async (req, res) => {
+  const ngo = await NGO.findOne({ user: req.user._id });
+  if (!ngo) {
+    return res.status(404).json({ message: "NGO not found" });
   }
+  res.json(ngo);
+};
+
+/* ================= APPROVE NGO (ADMIN) ================= */
+export const approveNgo = async (req, res) => {
+  const ngo = await NGO.findById(req.params.id);
+  if (!ngo) {
+    return res.status(404).json({ message: "NGO not found" });
+  }
+
+  ngo.status = "approved";
+  ngo.approvedBy = req.user._id;
+  ngo.approvedAt = Date.now();
+  await ngo.save();
+
+  res.json({
+    success: true,
+    message: "NGO approved",
+  });
+};
+/* ================= REJECT NGO (ADMIN) ================= */
+export const rejectNgo = async (req, res) => {
+  const ngo = await NGO.findById(req.params.id);
+  if (!ngo) {
+    return res.status(404).json({ message: "NGO not found" });
+  }
+
+  ngo.status = "rejected";
+  ngo.approvedBy = req.user._id;
+  ngo.approvedAt = Date.now();
+  await ngo.save();
+
+  res.json({
+    success: true,
+    message: "NGO rejected",
+  });
 };
