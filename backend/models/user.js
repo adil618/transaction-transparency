@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 6,
-      select: false, // password kabhi by default return nahi hoga
+      select: false,
     },
 
     role: {
@@ -40,6 +40,15 @@ const userSchema = new mongoose.Schema(
     lastLogin: {
       type: Date,
     },
+
+    refreshTokenHash: {
+      type: String,
+      select: false,
+    },
+
+    refreshTokenExpires: {
+      type: Date,
+    },
   },
   {
     timestamps: true, // createdAt & updatedAt
@@ -54,19 +63,33 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
-``
 
 // PASSWORD COMPARE METHOD
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.methods.generateAuthToken = function () {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     { id: this._id, role: this.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
+    process.env.JWT_ACCESS_SECRET,
+    { expiresIn: process.env.JWT_ACCESS_EXPIRES || "15m" }
   );
 };
 
-export default mongoose.models.user || mongoose.model("user", userSchema);
+userSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    { id: this._id, role: this.role },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: process.env.JWT_REFRESH_EXPIRES || "7d" }
+  );
+};
+
+userSchema.methods.setRefreshToken = async function (refreshToken) {
+  const salt = await bcrypt.genSalt(10);
+  this.refreshTokenHash = await bcrypt.hash(refreshToken, salt);
+  const expiresMs = 7 * 24 * 60 * 60 * 1000;
+  this.refreshTokenExpires = new Date(Date.now() + expiresMs);
+};
+
+export default mongoose.models.User || mongoose.model("User", userSchema);

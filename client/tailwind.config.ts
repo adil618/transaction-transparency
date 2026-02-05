@@ -6,8 +6,8 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
-    colors: {
+    extend: {
+      colors: {
         sand: {
           50: "#f7f6ee",
           100: "#eeecdd",
@@ -22,6 +22,7 @@ const config: Config = {
           950: "#18160c",
         },
       },
+    },
   },
   plugins: [],
 };

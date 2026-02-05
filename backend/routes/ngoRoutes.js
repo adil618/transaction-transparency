@@ -1,7 +1,7 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
 import authorizeRoles from "../middleware/roleMiddleware.js";
-import { createNgo, getMyNgo, approveNgo } from "../controllers/ngoController.js";
+import { createNgo, getMyNgo, approveNgo, rejectNgo } from "../controllers/ngoController.js";
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.get("/me", protect, authorizeRoles("NGO"), getMyNgo);
 
 // ADMIN approves NGO
 router.put("/approve/:id", protect, authorizeRoles("ADMIN"), approveNgo);
+// ADMIN rejects NGO
+router.put("/reject/:id", protect, authorizeRoles("ADMIN"), rejectNgo);
 
 export default router;

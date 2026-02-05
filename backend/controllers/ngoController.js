@@ -26,44 +26,59 @@ export const createNgo = async (req, res) => {
 
 /* ================= GET MY NGO ================= */
 export const getMyNgo = async (req, res) => {
-  const ngo = await NGO.findOne({ user: req.user._id });
-  if (!ngo) {
-    return res.status(404).json({ message: "NGO not found" });
+  try {
+    const ngo = await NGO.findOne({ user: req.user._id });
+    if (!ngo) {
+      return res.status(404).json({ message: "NGO not found" });
+    }
+    res.json(ngo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-  res.json(ngo);
 };
 
 /* ================= APPROVE NGO (ADMIN) ================= */
 export const approveNgo = async (req, res) => {
-  const ngo = await NGO.findById(req.params.id);
-  if (!ngo) {
-    return res.status(404).json({ message: "NGO not found" });
+  try {
+    const ngo = await NGO.findById(req.params.id);
+    if (!ngo) {
+      return res.status(404).json({ message: "NGO not found" });
+    }
+
+    ngo.status = "approved";
+    ngo.approvedBy = req.user._id;
+    ngo.approvedAt = Date.now();
+    await ngo.save();
+
+    res.json({
+      success: true,
+      message: "NGO approved",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  ngo.status = "approved";
-  ngo.approvedBy = req.user._id;
-  ngo.approvedAt = Date.now();
-  await ngo.save();
-
-  res.json({
-    success: true,
-    message: "NGO approved",
-  });
 };
 /* ================= REJECT NGO (ADMIN) ================= */
 export const rejectNgo = async (req, res) => {
-  const ngo = await NGO.findById(req.params.id);
-  if (!ngo) {
-    return res.status(404).json({ message: "NGO not found" });
+  try {
+    const ngo = await NGO.findById(req.params.id);
+    if (!ngo) {
+      return res.status(404).json({ message: "NGO not found" });
+    }
+
+    ngo.status = "rejected";
+    ngo.approvedBy = req.user._id;
+    ngo.approvedAt = Date.now();
+    await ngo.save();
+
+    res.json({
+      success: true,
+      message: "NGO rejected",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  ngo.status = "rejected";
-  ngo.approvedBy = req.user._id;
-  ngo.approvedAt = Date.now();
-  await ngo.save();
-
-  res.json({
-    success: true,
-    message: "NGO rejected",
-  });
 };
