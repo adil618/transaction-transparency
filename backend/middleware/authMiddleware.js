@@ -33,3 +33,6 @@ const protect = async (req, res, next) => {
 };
 
 export default protect;
+
+// Alias for backward compatibility
+export const authMiddleware = protect;

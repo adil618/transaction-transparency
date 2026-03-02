@@ -6,142 +6,342 @@
   },
   "item": [
     {
-      "name": "Auth - Register",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/auth/register",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "register"]
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Donor One\",\n  \"email\": \"donor1@demo.com\",\n  \"password\": \"password123\",\n  \"role\": \"DONOR\"\n}"
+            }
+          }
         },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"Donor One\",\n  \"email\": \"donor1@demo.com\",\n  \"password\": \"password123\",\n  \"role\": \"DONOR\"\n}"
-        }
-      }
-    },
-    {
-      "name": "Auth - Login",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/auth/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "login"]
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\"\n}"
+            }
+          }
         },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"donor@demo.com\",\n  \"password\": \"password123\"\n}"
-        }
-      }
-    },
-    {
-      "name": "Auth - Refresh",
-      "request": {
-        "method": "POST",
-        "url": {
-          "raw": "{{baseUrl}}/api/auth/refresh",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "refresh"]
-        }
-      }
-    },
-    {
-      "name": "Auth - Me",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/api/auth/me",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "me"]
-        }
-      }
-    },
-    {
-      "name": "NGO - Create Profile",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/ngos",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "ngos"]
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
         },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"Hope Foundation\",\n  \"registrationNumber\": \"REG-9999\",\n  \"description\": \"Relief and food aid.\",\n  \"contactEmail\": \"info@hope.org\",\n  \"contactPhone\": \"+1-555-1010\",\n  \"address\": \"1 Main St, Dallas, TX\"\n}"
-        }
-      }
-    },
-    {
-      "name": "NGO - Approve (Admin)",
-      "request": {
-        "method": "PUT",
-        "url": {
-          "raw": "{{baseUrl}}/api/ngos/approve/{{ngoId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "ngos", "approve", "{{ngoId}}"]
-        }
-      }
-    },
-    {
-      "name": "Campaign - Create",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/campaigns",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "campaigns"]
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
         },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"title\": \"Food Drive\",\n  \"description\": \"Meals for families.\",\n  \"goalAmount\": 3000\n}"
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "name": "Donation - Create (Donor)",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/donations",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "donations"]
+      "name": "Admin Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/dashboard/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "dashboard", "stats"]
+            }
+          }
         },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"campaignId\": \"{{campaignId}}\",\n  \"amount\": 50\n}"
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "{{userId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"role\": \"NGO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Block User",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{userId}}/block",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "{{userId}}", "block"]
+            }
+          }
+        },
+        {
+          "name": "Unblock User",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{userId}}/unblock",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "{{userId}}", "unblock"]
+            }
+          }
+        },
+        {
+          "name": "List NGOs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/ngos?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "ngos"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve NGO",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/ngos/{{ngoId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "ngos", "{{ngoId}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Reject NGO",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/ngos/{{ngoId}}/reject",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "ngos", "{{ngoId}}", "reject"]
+            }
+          }
+        },
+        {
+          "name": "List Campaigns",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/campaigns?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "campaigns"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Campaign",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/campaigns/{{campaignId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "campaigns", "{{campaignId}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Archive Campaign",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/campaigns/{{campaignId}}/archive",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "campaigns", "{{campaignId}}", "archive"]
+            }
+          }
+        },
+        {
+          "name": "List Transactions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/transactions?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "transactions"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "name": "Admin - All Transactions",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/api/donations/all",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "donations", "all"]
+      "name": "NGO Operations",
+      "item": [
+        {
+          "name": "Create NGO Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ngos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ngos"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hope Foundation\",\n  \"description\": \"Relief and food aid.\",\n  \"contactEmail\": \"info@hope.org\",\n  \"contactPhone\": \"+1-555-1010\"\n}"
+            }
+          }
         }
-      }
+      ]
+    },
+    {
+      "name": "Campaign Operations",
+      "item": [
+        {
+          "name": "Create Campaign",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/campaigns",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "campaigns"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Food Drive\",\n  \"description\": \"Meals for families.\",\n  \"goalAmount\": 3000,\n  \"currency\": \"USD\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Donation Operations",
+      "item": [
+        {
+          "name": "Create Donation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/donations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"campaignId\": \"{{campaignId}}\",\n  \"amount\": 50,\n  \"currency\": \"USD\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dynamic Forms",
+      "item": [
+        {
+          "name": "Get Register Form (NGO)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/forms/register?role=NGO",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "forms", "register"],
+              "query": [
+                { "key": "role", "value": "NGO" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Campaign Form",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/forms/campaign",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "forms", "campaign"]
+            }
+          }
+        }
+      ]
     }
   ],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "baseUrl", "value": "http://localhost:5001" },
+    { "key": "userId", "value": "" },
     { "key": "ngoId", "value": "" },
     { "key": "campaignId", "value": "" }
   ]

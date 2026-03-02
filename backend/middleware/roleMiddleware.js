@@ -11,3 +11,6 @@ const allowRoles = (...roles) => {
 };
 
 export default allowRoles;
+
+// Alias for backward compatibility
+export const authorizeRoles = allowRoles;
