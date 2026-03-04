@@ -10,9 +10,9 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, authorizeRoles("DONOR"), createDonation);
-router.get("/mine", protect, authorizeRoles("DONOR"), getMyDonations);
-router.get("/ngo", protect, authorizeRoles("NGO"), getNgoTransactions);
-router.get("/all", protect, authorizeRoles("ADMIN"), getAllTransactions);
+router.post("/", protect, authorizeRoles("donor"), createDonation);
+router.get("/mine", protect, authorizeRoles("donor"), getMyDonations);
+router.get("/ngo", protect, authorizeRoles("ngo"), getNgoTransactions);
+router.get("/all", protect, authorizeRoles("admin"), getAllTransactions);
 
 export default router;

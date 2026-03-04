@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/admin-layout";
+import ProtectedRoute from "@/components/protected-route";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,14 +26,14 @@ type Transaction = {
   status: string;
   transactionRef: string;
   createdAt: string;
-  donor: {
+  donor?: {
     name: string;
     email: string;
   };
-  campaign: {
+  campaign?: {
     title: string;
   };
-  ngo: {
+  ngo?: {
     name: string;
   };
 };
@@ -107,9 +108,10 @@ export default function TransactionsPage() {
   };
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+    <ProtectedRoute roles={["admin"]}>
+      <AdminLayout>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Transactions</h1>
             <p className="text-muted-foreground">
@@ -210,16 +212,16 @@ export default function TransactionsPage() {
                       </TableCell>
                       <TableCell>
                         <div>
-                          <p className="font-medium">{transaction.donor.name}</p>
+                          <p className="font-medium">{transaction.donor?.name || "Unknown"}</p>
                           <p className="text-sm text-muted-foreground">
-                            {transaction.donor.email}
+                            {transaction.donor?.email || "N/A"}
                           </p>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <p className="max-w-xs truncate">{transaction.campaign.title}</p>
+                        <p className="max-w-xs truncate">{transaction.campaign?.title || "Unknown"}</p>
                       </TableCell>
-                      <TableCell>{transaction.ngo.name}</TableCell>
+                      <TableCell>{transaction.ngo?.name || "Unknown"}</TableCell>
                       <TableCell className="font-medium">
                         {transaction.currency} {transaction.amount}
                       </TableCell>
@@ -269,5 +271,6 @@ export default function TransactionsPage() {
         </Card>
       </div>
     </AdminLayout>
+  </ProtectedRoute>
   );
 }

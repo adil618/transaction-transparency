@@ -22,21 +22,21 @@ const run = async () => {
     name: "Admin User",
     email: "admin@demo.com",
     password: "password123",
-    role: "ADMIN",
+    role: "admin",
   });
 
   const ngoUser = await User.create({
     name: "Helping Hands",
     email: "ngo@demo.com",
     password: "password123",
-    role: "NGO",
+    role: "ngo",
   });
 
   const donor = await User.create({
     name: "Donor One",
     email: "donor@demo.com",
     password: "password123",
-    role: "DONOR",
+    role: "donor",
   });
 
   const ngo = await NGO.create({

@@ -9,7 +9,7 @@ export default function ProtectedRoute({
   roles,
 }: {
   children: React.ReactNode;
-  roles?: Array<"ADMIN" | "NGO" | "DONOR">;
+  roles?: Array<"admin" | "ngo" | "donor" | "tester">;
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function ProtectedRoute({
       return;
     }
     if (!loading && user && roles && !roles.includes(user.role)) {
-      router.replace("/dashboard");
+      router.replace(`/dashboard/${user.role}`);
     }
   }, [loading, user, roles, router]);
 

@@ -13,10 +13,10 @@ import {
 const router = express.Router();
 
 router.get("/", getCampaigns);
-router.get("/mine", protect, authorizeRoles("NGO"), getMyCampaigns);
+router.get("/mine", protect, authorizeRoles("ngo"), getMyCampaigns);
 router.get("/:id", getCampaignById);
-router.post("/", protect, authorizeRoles("NGO"), createCampaign);
-router.put("/:id", protect, authorizeRoles("NGO"), updateCampaign);
-router.delete("/:id", protect, authorizeRoles("NGO"), deleteCampaign);
+router.post("/", protect, authorizeRoles("ngo"), createCampaign);
+router.put("/:id", protect, authorizeRoles("ngo"), updateCampaign);
+router.delete("/:id", protect, authorizeRoles("ngo"), deleteCampaign);
 
 export default router;

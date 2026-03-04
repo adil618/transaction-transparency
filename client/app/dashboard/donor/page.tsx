@@ -58,7 +58,7 @@ export default function DonorDashboard() {
   };
 
   return (
-    <ProtectedRoute roles={["DONOR"]}>
+    <ProtectedRoute roles={["donor"]}>
       <Navbar />
       <div className="min-h-screen bg-slate-50 p-6">
         <div className="mx-auto max-w-6xl space-y-8">

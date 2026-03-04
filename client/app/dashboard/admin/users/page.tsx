@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/admin-layout";
+import ProtectedRoute from "@/components/protected-route";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +40,7 @@ type User = {
   _id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "NGO" | "DONOR";
+  role: "admin" | "ngo" | "donor";
   status: "active" | "blocked";
   createdAt: string;
   lastLogin?: string;
@@ -59,8 +60,8 @@ export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState<UsersResponse['pagination'] | null>(null);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -73,8 +74,8 @@ export default function UsersPage() {
         page: page.toString(),
         limit: "10",
         ...(search && { search }),
-        ...(roleFilter && { role: roleFilter }),
-        ...(statusFilter && { status: statusFilter }),
+        ...(roleFilter !== "all" && { role: roleFilter }),
+        ...(statusFilter !== "all" && { status: statusFilter }),
       });
 
       const data = await apiFetch<UsersResponse>(`/api/admin/users?${params}`);
@@ -153,11 +154,11 @@ export default function UsersPage() {
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
-      case "ADMIN":
+      case "admin":
         return "destructive";
-      case "NGO":
+      case "ngo":
         return "default";
-      case "DONOR":
+      case "donor":
         return "secondary";
       default:
         return "outline";
@@ -169,9 +170,10 @@ export default function UsersPage() {
   };
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div>
+    <ProtectedRoute roles={["admin"]}>
+      <AdminLayout>
+        <div className="space-y-6">
+          <div>
           <h1 className="text-3xl font-bold tracking-tight">Users</h1>
           <p className="text-muted-foreground">
             Manage user accounts and permissions.
@@ -202,10 +204,10 @@ export default function UsersPage() {
                   <SelectValue placeholder="Filter by role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Roles</SelectItem>
-                  <SelectItem value="ADMIN">Admin</SelectItem>
-                  <SelectItem value="NGO">NGO</SelectItem>
-                  <SelectItem value="DONOR">Donor</SelectItem>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="ngo">NGO</SelectItem>
+                  <SelectItem value="donor">Donor</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -213,7 +215,7 @@ export default function UsersPage() {
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
                   <SelectItem value="blocked">Blocked</SelectItem>
                 </SelectContent>
@@ -374,9 +376,9 @@ export default function UsersPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="DONOR">Donor</SelectItem>
-                    <SelectItem value="NGO">NGO</SelectItem>
-                    <SelectItem value="ADMIN">Admin</SelectItem>
+                    <SelectItem value="donor">Donor</SelectItem>
+                    <SelectItem value="ngo">NGO</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -406,5 +408,6 @@ export default function UsersPage() {
         </Dialog>
       </div>
     </AdminLayout>
+  </ProtectedRoute>
   );
 }

@@ -88,7 +88,7 @@ export default function NgoDashboard() {
   };
 
   return (
-    <ProtectedRoute roles={["NGO"]}>
+    <ProtectedRoute roles={["ngo"]}>
       <Navbar />
       <div className="min-h-screen bg-slate-50 p-6">
         <div className="mx-auto max-w-6xl space-y-8">

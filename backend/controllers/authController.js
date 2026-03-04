@@ -19,7 +19,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password,
-      role: role || "DONOR",
+      role: role || "donor",
     });
 
     // Generate tokens
@@ -151,7 +151,24 @@ export const logoutUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// auth for admin routes
+export const adminAuth = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Admin access required" });
+  }
+};
+// auth for donor routes
+export const donorAuth = (req, res, next) => {
+  if (req.user && req.user.role === "donor") {
+    next();
+  } else {
+    res.status(403).json({ message: "Donor access required" });
+  }
+};
 
+// get current user
 export const getMe = async (req, res) => {
   res.status(200).json({ user: req.user });
 };

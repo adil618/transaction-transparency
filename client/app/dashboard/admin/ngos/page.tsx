@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/admin-layout";
+import ProtectedRoute from "@/components/protected-route";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -117,9 +118,10 @@ export default function NgosPage() {
   };
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div>
+    <ProtectedRoute roles={["admin"]}>
+      <AdminLayout>
+        <div className="space-y-6">
+          <div>
           <h1 className="text-3xl font-bold tracking-tight">NGOs</h1>
           <p className="text-muted-foreground">
             Manage NGO registrations and approvals.
@@ -189,8 +191,8 @@ export default function NgosPage() {
                       <TableCell className="font-medium">{ngo.name}</TableCell>
                       <TableCell>
                         <div>
-                          <p className="font-medium">{ngo.user.name}</p>
-                          <p className="text-sm text-muted-foreground">{ngo.user.email}</p>
+                          <p className="font-medium">{ngo.user?.name || "N/A"}</p>
+                          <p className="text-sm text-muted-foreground">{ngo.user?.email || "N/A"}</p>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -268,5 +270,6 @@ export default function NgosPage() {
         </Card>
       </div>
     </AdminLayout>
+  </ProtectedRoute>
   );
 }

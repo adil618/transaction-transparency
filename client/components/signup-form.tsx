@@ -12,10 +12,16 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useAuth } from "@/context/auth-context";
 import { apiFetch } from "@/lib/api";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
-type Role = "DONOR" | "NGO";
+type Role = "donor" | "ngo";
 
 export function SignupForm({
   className,
@@ -23,7 +29,7 @@ export function SignupForm({
 }: React.ComponentProps<"form">) {
   const { register } = useAuth();
   const [step, setStep] = useState(1);
-  const [role, setRole] = useState<Role>("DONOR");
+  const [role, setRole] = useState<Role>("donor");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,6 +56,9 @@ export function SignupForm({
     preferredCause: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const nextStep = () => {
     setError(null);
     if (!account.name || !account.email || !account.password) {
@@ -75,7 +84,7 @@ export function SignupForm({
         role,
       });
 
-      if (role === "NGO") {
+      if (role === "ngo") {
         await apiFetch("/api/ngos", {
           method: "POST",
           body: JSON.stringify({
@@ -149,28 +158,48 @@ export function SignupForm({
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                value={account.password}
-                onChange={(e) =>
-                  setAccount({ ...account, password: e.target.value })
-                }
-                required
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  value={account.password}
+                  onChange={(e) =>
+                    setAccount({ ...account, password: e.target.value })
+                  }
+                  required
+                />
+                <InputGroupAddon
+                  align="inline-end"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="cursor-pointer"
+                >
+                  {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </InputGroupAddon>
+              </InputGroup>
               <FieldDescription>Must be at least 8 characters long.</FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-              <Input
-                id="confirm-password"
-                type="password"
-                value={account.confirmPassword}
-                onChange={(e) =>
-                  setAccount({ ...account, confirmPassword: e.target.value })
-                }
-                required
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="confirm-password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm password"
+                  value={account.confirmPassword}
+                  onChange={(e) =>
+                    setAccount({ ...account, confirmPassword: e.target.value })
+                  }
+                  required
+                />
+                <InputGroupAddon
+                  align="inline-end"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="cursor-pointer"
+                >
+                  {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </InputGroupAddon>
+              </InputGroup>
               <FieldDescription>Please confirm your password.</FieldDescription>
             </Field>
             <Field>
@@ -178,15 +207,15 @@ export function SignupForm({
               <div className="flex gap-2">
                 <Button
                   type="button"
-                  variant={role === "DONOR" ? "default" : "outline"}
-                  onClick={() => setRole("DONOR")}
+                  variant={role === "donor" ? "default" : "outline"}
+                  onClick={() => setRole("donor")}
                 >
                   Donor
                 </Button>
                 <Button
                   type="button"
-                  variant={role === "NGO" ? "default" : "outline"}
-                  onClick={() => setRole("NGO")}
+                  variant={role === "ngo" ? "default" : "outline"}
+                  onClick={() => setRole("ngo")}
                 >
                   NGO
                 </Button>
@@ -201,7 +230,7 @@ export function SignupForm({
           </>
         )}
 
-        {step === 2 && role === "DONOR" && (
+        {step === 2 && role === "donor" && (
           <>
             <Field>
               <FieldLabel>Phone (Optional)</FieldLabel>
@@ -235,7 +264,7 @@ export function SignupForm({
           </>
         )}
 
-        {step === 2 && role === "NGO" && (
+        {step === 2 && role === "ngo" && (
           <>
             <Field>
               <FieldLabel>NGO Name</FieldLabel>

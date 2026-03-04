@@ -4,13 +4,20 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Field, FieldLabel } from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useAuth } from "@/context/auth-context";
 import Navbar from "@/components/navbar";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -40,20 +47,40 @@ export default function LoginPage() {
             Sign in to your account
           </p>
           <form className="mt-6 space-y-4" onSubmit={onSubmit}>
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <Field>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <InputGroup>
+                <InputGroupInput
+                  id="email"
+                  type="email"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </InputGroup>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <InputGroup>
+                <InputGroupInput
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <InputGroupAddon
+                  align="inline-end"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="cursor-pointer"
+                >
+                  {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </InputGroupAddon>
+              </InputGroup>
+            </Field>
+
             {error && <div className="text-sm text-red-600">{error}</div>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Signing in..." : "Login"}

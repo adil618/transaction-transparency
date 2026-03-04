@@ -10,9 +10,9 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, authorizeRoles("NGO"), createBeneficiary);
-router.get("/mine", protect, authorizeRoles("NGO"), getMyBeneficiaries);
-router.put("/:id", protect, authorizeRoles("NGO"), updateBeneficiary);
-router.delete("/:id", protect, authorizeRoles("NGO"), deleteBeneficiary);
+router.post("/", protect, authorizeRoles("ngo"), createBeneficiary);
+router.get("/mine", protect, authorizeRoles("ngo"), getMyBeneficiaries);
+router.put("/:id", protect, authorizeRoles("ngo"), updateBeneficiary);
+router.delete("/:id", protect, authorizeRoles("ngo"), deleteBeneficiary);
 
 export default router;

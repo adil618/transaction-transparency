@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/admin-layout";
+import ProtectedRoute from "@/components/protected-route";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiFetch } from "@/lib/api";
 import { Users, Building2, Target, CreditCard, DollarSign, UserCheck } from "lucide-react";
@@ -39,8 +40,9 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <AdminLayout>
-        <div className="space-y-6">
+      <ProtectedRoute roles={["admin"]}>
+        <AdminLayout>
+          <div className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {[...Array(6)].map((_, i) => (
               <Card key={i}>
@@ -55,16 +57,19 @@ export default function AdminDashboard() {
           </div>
         </div>
       </AdminLayout>
+    </ProtectedRoute>
     );
   }
 
   if (!stats) {
     return (
-      <AdminLayout>
-        <div className="flex items-center justify-center h-64">
+      <ProtectedRoute roles={["admin"]}>
+        <AdminLayout>
+          <div className="flex items-center justify-center h-64">
           <p className="text-muted-foreground">Failed to load dashboard data</p>
         </div>
       </AdminLayout>
+    </ProtectedRoute>
     );
   }
 
@@ -101,14 +106,14 @@ export default function AdminDashboard() {
     },
     {
       title: "Total Raised",
-      value: `$${stats.totalRaised.toLocaleString()}`,
+      value: `$${(stats.totalRaised || 0).toLocaleString()}`,
       icon: DollarSign,
       description: "Funds collected",
     },
   ];
 
   // Prepare chart data
-  const monthlyData = stats.monthlyStats.map(stat => ({
+  const monthlyData = (stats.monthlyStats || []).map(stat => ({
     month: `${stat._id.year}-${stat._id.month.toString().padStart(2, '0')}`,
     amount: stat.totalAmount,
     count: stat.count,
@@ -120,9 +125,10 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div>
+    <ProtectedRoute roles={["admin"]}>
+      <AdminLayout>
+        <div className="space-y-6">
+          <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">
             Welcome back! Here's what's happening with your platform.
@@ -207,10 +213,10 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {stats.recentDonations.length === 0 ? (
+              {(stats.recentDonations || []).length === 0 ? (
                 <p className="text-muted-foreground text-center py-4">No recent donations</p>
               ) : (
-                stats.recentDonations.map((donation) => (
+                (stats.recentDonations || []).map((donation) => (
                   <div key={donation._id} className="flex items-center justify-between border-b pb-2">
                     <div>
                       <p className="font-medium">{donation.donor?.name}</p>
@@ -232,5 +238,6 @@ export default function AdminDashboard() {
         </Card>
       </div>
     </AdminLayout>
+  </ProtectedRoute>
   );
 }
