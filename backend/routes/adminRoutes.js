@@ -14,7 +14,9 @@ import {
   listCampaigns,
   approveCampaign,
   archiveCampaign,
-  listTransactions
+  listTransactions,
+  createPayout,
+  listPayouts
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -37,6 +39,7 @@ router.put("/users/:id/unblock", unblockUser);
 router.get("/ngos", listNgos);
 router.put("/ngos/:id/approve", approveNgo);
 router.put("/ngos/:id/reject", rejectNgo);
+router.post("/ngos/:id/payout", createPayout);
 
 // Campaign management
 router.get("/campaigns", listCampaigns);
@@ -45,5 +48,8 @@ router.put("/campaigns/:id/archive", archiveCampaign);
 
 // Transaction management
 router.get("/transactions", listTransactions);
+
+// Payout management
+router.get("/payouts", listPayouts);
 
 export default router;

@@ -143,9 +143,9 @@ function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="field-description"
       className={cn(
-        "text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance",
+        "text-gray-600 text-xs leading-relaxed font-normal group-has-[[data-orientation=horizontal]]/field:text-balance mt-1.5",
         "last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&]:-mt-1.5",
-        "[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
+        "[&>a:hover]:text-blue-600 [&>a]:text-blue-600 [&>a]:underline [&>a]:underline-offset-4",
         className
       )}
       {...props}

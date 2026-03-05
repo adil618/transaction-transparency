@@ -7,13 +7,13 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const inputGroupVariants = cva(
-  "flex items-center w-full rounded-md border border-input bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px] has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50 md:text-sm",
+  "flex items-center w-full rounded-xl bg-gray-50 text-base shadow-sm transition-all duration-300 outline-none border-0 hover:bg-gray-100 hover:shadow-md focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:shadow-lg has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50 md:text-sm",
   {
     variants: {
       size: {
-        default: "h-9",
-        sm: "h-8",
-        lg: "h-10",
+        default: "h-11",
+        sm: "h-9",
+        lg: "h-12",
       },
     },
     defaultVariants: {
@@ -51,7 +51,7 @@ const InputGroupInput = React.forwardRef<HTMLInputElement, InputGroupInputProps>
       <Comp
         ref={ref}
         className={cn(
-          "flex-1 bg-transparent px-3 py-2 placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed",
+          "flex-1 bg-transparent px-4 py-2.5 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed text-base md:text-sm",
           className
         )}
         {...props}
@@ -73,10 +73,10 @@ const InputGroupAddon = React.forwardRef<HTMLDivElement, InputGroupAddonProps>(
       <Comp
         ref={ref}
         className={cn(
-          "flex items-center justify-center text-muted-foreground",
-          align === "inline-start" && "pl-3",
-          align === "inline-end" && "pr-3",
-          "[&>svg]:h-4 [&>svg]:w-4",
+          "flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors duration-200",
+          align === "inline-start" && "pl-4",
+          align === "inline-end" && "pr-4",
+          "[&>svg]:h-5 [&>svg]:w-5",
           className
         )}
         {...props}

@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import Campaign from "../models/Campaign.js";
 import Donation from "../models/Donation.js";
 import Beneficiary from "../models/Beneficiary.js";
+import Payout from "../models/Payout.js";
 
 // Get dashboard stats
 export const getDashboardStats = async (req, res) => {
@@ -341,6 +342,103 @@ export const listTransactions = async (req, res) => {
     res.json({
       success: true,
       transactions: donations,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Payout management
+export const createPayout = async (req, res) => {
+  try {
+    const { amount, description, currency = 'USD' } = req.body;
+    const ngoId = req.params.id;
+
+    // Validate input
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ success: false, message: 'Valid amount is required' });
+    }
+    if (!description) {
+      return res.status(400).json({ success: false, message: 'Description is required' });
+    }
+
+    // Find NGO and verify it exists and is approved
+    const ngo = await NGO.findById(ngoId);
+    if (!ngo) {
+      return res.status(404).json({ success: false, message: 'NGO not found' });
+    }
+    if (ngo.status !== 'approved') {
+      return res.status(400).json({ success: false, message: 'NGO must be approved to receive payouts' });
+    }
+
+    // Verify NGO has bank details
+    if (!ngo.bankDetails || !ngo.bankDetails.accountNumber) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'NGO does not have bank details configured' 
+      });
+    }
+
+    // Generate unique transaction reference
+    const transactionRef = `PAYOUT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+    // Create payout record
+    const payout = await Payout.create({
+      admin: req.user._id,
+      ngo: ngoId,
+      amount,
+      currency,
+      description,
+      status: 'completed',
+      transactionRef,
+      bankDetails: ngo.bankDetails
+    });
+
+    // Populate admin and ngo details
+    await payout.populate('admin', 'name email');
+    await payout.populate('ngo', 'name contactEmail');
+
+    res.status(201).json({
+      success: true,
+      message: 'Payout created successfully',
+      payout
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const listPayouts = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status, ngoId, dateFrom, dateTo } = req.query;
+
+    const query = {};
+    if (status) query.status = status;
+    if (ngoId) query.ngo = ngoId;
+    if (dateFrom || dateTo) {
+      query.createdAt = {};
+      if (dateFrom) query.createdAt.$gte = new Date(dateFrom);
+      if (dateTo) query.createdAt.$lte = new Date(dateTo);
+    }
+
+    const payouts = await Payout.find(query)
+      .populate('admin', 'name email')
+      .populate('ngo', 'name contactEmail')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    const total = await Payout.countDocuments(query);
+
+    res.json({
+      success: true,
+      payouts,
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),

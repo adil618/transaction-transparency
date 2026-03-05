@@ -1,36 +1,62 @@
-import { GalleryVerticalEnd } from "lucide-react"
-
+import { Heart } from "lucide-react"
 import { SignupForm } from "@/components/signup-form"
 import Navbar from "@/components/navbar"
-
 export default function SignupPage() {
   return (
-    <div className="bg-slate-50">
-      <Navbar />
-      <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <a href="/" className="flex items-center gap-2 font-medium">
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-4" />
-            </div>
-            <span className="text-slate-900">CharityConnect</span>
-          </a>
-        </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+      {/* Sticky Header */}
+      <Navbar/>
+      {/* Main Content */}
+      <div className="min-h-[calc(100vh-76px)] flex flex-col justify-center items-center px-4 py-12">
+        <div className="w-full max-w-2xl">
+          {/* Header */}
+          <div className="text-center mb-10 animate-fadeIn">
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-3">
+              Create Your Account
+            </h1>
+            <p className="text-lg text-gray-500">
+              Join our transparent donation platform and make a real impact
+            </p>
+          </div>
+
+          {/* Form Card */}
+          <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/50 p-8 md:p-12 animate-scaleIn border border-gray-100/50">
             <SignupForm />
           </div>
+
+          {/* Footer Benefits */}
+          <div className="grid md:grid-cols-3 gap-6 mt-12 mb-8">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <Heart className="h-10 w-10 text-red-500 fill-red-500" />
+              </div>
+              <h3 className="font-semibold text-slate-900 mb-1">100% Transparent</h3>
+              <p className="text-sm text-gray-500">Track every donation from source to impact</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-lg">🔒</span>
+                </div>
+              </div>
+              <h3 className="font-semibold text-slate-900 mb-1">Verified & Secure</h3>
+              <p className="text-sm text-gray-500">All organizations thoroughly vetted</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-lg">✨</span>
+                </div>
+              </div>
+              <h3 className="font-semibold text-slate-900 mb-1">Real Impact</h3>
+              <p className="text-sm text-gray-500">See the difference you make</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="bg-slate-900/5 relative hidden lg:block">
-        <img
-          src="https://img.freepik.com/free-photo/smiley-volunteers-posing-together-with-food-donations_23-2148732682.jpg?t=st=1769604144~exp=1769607744~hmac=9c02b0edfa59a4436816b57ee9d76d1548eb830b3c76fc0bf995fa95e2915374"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      </div>
       </div>
     </div>
   )
 }
+

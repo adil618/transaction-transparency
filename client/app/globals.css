@@ -130,34 +130,155 @@
 @layer components {
   /* Clean Button Styles */
   .btn-primary {
-    @apply bg-black text-white hover:bg-gray-800 px-6 py-2 rounded-lg font-medium transition-colors;
+    @apply bg-black text-white hover:bg-gray-800 px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg;
   }
   
   .btn-secondary {
-    @apply bg-white text-black border border-black hover:bg-gray-50 px-6 py-2 rounded-lg font-medium transition-colors;
+    @apply bg-white text-black border border-black hover:bg-gray-50 px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105;
   }
   
   .btn-outline {
-    @apply bg-transparent text-black border border-gray-300 hover:bg-gray-50 px-6 py-2 rounded-lg font-medium transition-colors;
+    @apply bg-transparent text-black border border-gray-300 hover:bg-gray-50 px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:border-black;
   }
   
   /* Card Styles */
   .card {
-    @apply bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow;
+    @apply bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1;
   }
   
   /* Input Styles */
   .input-field {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black transition-colors;
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200;
   }
   
   /* Sidebar Styles */
   .sidebar-item {
-    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors;
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-200 hover:translate-x-1;
   }
   
   .sidebar-item.active {
     @apply bg-black text-white font-semibold;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  .animate-slideInLeft {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+  
+  .animate-slideInRight {
+    animation: slideInRight 0.6s ease-out forwards;
+  }
+  
+  .animate-scaleIn {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  /* Stagger Animation Delays */
+  .animate-delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .animate-delay-400 {
+    animation-delay: 0.4s;
+  }
+  
+  .animate-delay-500 {
+    animation-delay: 0.5s;
+  }
+  
+  .animate-delay-600 {
+    animation-delay: 0.6s;
+  }
+  
+  /* Gradient Backgrounds */
+  .gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .gradient-success {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+  
+  .gradient-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  
+  .gradient-dark {
+    background: linear-gradient(135deg, #000000 0%, #434343 100%);
+  }
+  
+  /* Smooth Page Transitions */
+  .page-transition {
+    @apply transition-all duration-500 ease-in-out;
   }
 }
 

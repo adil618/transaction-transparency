@@ -8,6 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
   Table,
   TableBody,
   TableCell,
@@ -16,7 +26,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { apiFetch } from "@/lib/api";
-import { Search, Check, X } from "lucide-react";
+import { Search, Check, X, FileText, Send } from "lucide-react";
 import { toast } from "sonner";
 
 type Ngo = {
@@ -25,6 +35,10 @@ type Ngo = {
   description?: string;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
+  documents?: {
+    name?: string;
+    url?: string;
+  }[];
   user: {
     _id: string;
     name: string;
@@ -50,6 +64,13 @@ export default function NgosPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState<NgosResponse['pagination'] | null>(null);
+  
+  // Payout dialog state
+  const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
+  const [selectedNgo, setSelectedNgo] = useState<Ngo | null>(null);
+  const [payoutAmount, setPayoutAmount] = useState("");
+  const [payoutDescription, setPayoutDescription] = useState("");
+  const [payoutLoading, setPayoutLoading] = useState(false);
 
   const loadNgos = async () => {
     try {
@@ -114,6 +135,63 @@ export default function NgosPage() {
         return "secondary";
       default:
         return "outline";
+    }
+  };
+
+  const openFirstDocument = (ngo: Ngo) => {
+    const firstDocUrl = ngo.documents?.[0]?.url;
+    if (!firstDocUrl) {
+      toast.info("No documents uploaded for this NGO");
+      return;
+    }
+    window.open(firstDocUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const openPayoutDialog = (ngo: Ngo) => {
+    if (ngo.status !== "approved") {
+      toast.error("Only approved NGOs can receive payouts");
+      return;
+    }
+    setSelectedNgo(ngo);
+    setPayoutAmount("");
+    setPayoutDescription("");
+    setPayoutDialogOpen(true);
+  };
+
+  const handlePayout = async () => {
+    if (!selectedNgo) return;
+
+    const amount = parseFloat(payoutAmount);
+    if (!amount || amount <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+    if (!payoutDescription.trim()) {
+      toast.error("Please enter a description");
+      return;
+    }
+
+    try {
+      setPayoutLoading(true);
+      await apiFetch(`/api/admin/ngos/${selectedNgo._id}/payout`, {
+        method: "POST",
+        body: JSON.stringify({
+          amount,
+          description: payoutDescription,
+          currency: "USD"
+        }),
+      });
+
+      toast.success(`Payout of $${amount} sent to ${selectedNgo.name}`);
+      setPayoutDialogOpen(false);
+      setSelectedNgo(null);
+      setPayoutAmount("");
+      setPayoutDescription("");
+    } catch (error: any) {
+      console.error("Failed to create payout:", error);
+      toast.error(error?.message || "Failed to create payout");
+    } finally {
+      setPayoutLoading(false);
     }
   };
 
@@ -210,6 +288,24 @@ export default function NgosPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openFirstDocument(ngo)}
+                            className="text-blue-600 hover:text-blue-700"
+                            title="View uploaded document"
+                          >
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openPayoutDialog(ngo)}
+                            className="text-indigo-600 hover:text-indigo-700"
+                            title="Send money to NGO"
+                          >
+                            <Send className="h-4 w-4" />
+                          </Button>
                           {ngo.status === "pending" && (
                             <>
                               <Button
@@ -268,6 +364,64 @@ export default function NgosPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Payout Dialog */}
+        <Dialog open={payoutDialogOpen} onOpenChange={setPayoutDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Send Money to NGO</DialogTitle>
+              <DialogDescription>
+                Send a payout to {selectedNgo?.name}. This will create a transaction record.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Amount (USD)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  placeholder="Enter amount"
+                  value={payoutAmount}
+                  onChange={(e) => setPayoutAmount(e.target.value)}
+                  min="0.01"
+                  step="0.01"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Enter payout description"
+                  value={payoutDescription}
+                  onChange={(e) => setPayoutDescription(e.target.value)}
+                  rows={3}
+                />
+              </div>
+              {selectedNgo && (
+                <div className="rounded-lg bg-muted p-3 text-sm">
+                  <p className="font-medium">NGO Details:</p>
+                  <p className="text-muted-foreground">{selectedNgo.name}</p>
+                  <p className="text-muted-foreground text-xs">{selectedNgo.user?.email}</p>
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setPayoutDialogOpen(false)}
+                disabled={payoutLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handlePayout}
+                disabled={payoutLoading}
+              >
+                {payoutLoading ? "Processing..." : "Send Money"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   </ProtectedRoute>
