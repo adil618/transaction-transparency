@@ -39,14 +39,14 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
       
       <div className="mx-auto max-w-7xl px-6 py-20">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900">
-            Get in Touch
+          <h1 className="text-5xl mb-6">
+            Get in <span className="text-rose-600">Touch</span>
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
@@ -263,9 +263,9 @@ export default function ContactPage() {
 
         {/* Support Section */}
         <section>
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+          <Card className="border-0 shadow-xl bg-rose-600 text-white">
             <CardContent className="p-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">Need Immediate Assistance?</h2>
+              <h2 className="text-3xl mb-4">Need Immediate Assistance?</h2>
               <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
                 Our support team is available 24/7 to help you with any questions or issues.
               </p>
@@ -275,7 +275,7 @@ export default function ContactPage() {
                     Email Support
                   </a>
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-rose-600">
                   <Phone className="h-4 w-4 mr-2" />
                   Call Us
                 </Button>
@@ -286,10 +286,10 @@ export default function ContactPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12 mt-20">
+      <footer className="bg-gray-900 text-white py-12 mt-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center text-sm text-slate-400">
-            <p>&copy; 2026 Transaction Transparency Platform. All rights reserved.</p>
+          <div className="text-center text-sm text-gray-400">
+            <p>&copy; 2026 DonateTransparently. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -14,6 +14,10 @@ import beneficiaryRoutes from './routes/beneficiaryRoutes.js';
 import donationRoutes from './routes/donationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import formRoutes from './routes/formRoutes.js';
+import donorRoutes from './routes/donorRoutes.js';
+import paymentRequestRoutes from './routes/paymentRequestRoutes.js';
+import fundUsageRoutes from './routes/fundUsageRoutes.js';
+import ngoDashboardRoutes from './routes/ngoDashboardRoutes.js';
 
 dotenv.config();
 
@@ -70,6 +74,10 @@ app.use("/api/beneficiaries", beneficiaryRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/forms", formRoutes);
+app.use("/api/donor", donorRoutes);
+app.use("/api/payment-requests", paymentRequestRoutes);
+app.use("/api/fund-usage", fundUsageRoutes);
+app.use("/api/ngo", ngoDashboardRoutes);
 
 // Error handling
 app.use(notFound);

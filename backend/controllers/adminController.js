@@ -4,6 +4,117 @@ import Campaign from "../models/Campaign.js";
 import Donation from "../models/Donation.js";
 import Beneficiary from "../models/Beneficiary.js";
 import Payout from "../models/Payout.js";
+import PaymentRequest from "../models/PaymentRequest.js";
+import FundUsage from "../models/FundUsage.js";
+
+// Get admin panel stats
+export const getAdminStats = async (req, res) => {
+  try {
+    const [
+      totalVolumeResult,
+      verifiedNgos,
+      pendingNgos,
+      activeDonors,
+      pendingPaymentRequests,
+      recentFlaggedActivities,
+      monthlyStats,
+      newDonorsThisMonth
+    ] = await Promise.all([
+      Donation.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]),
+      NGO.countDocuments({ status: 'approved' }),
+      NGO.countDocuments({ status: 'pending' }),
+      User.countDocuments({ role: 'donor' }),
+      PaymentRequest.countDocuments({ status: 'pending' }),
+      FundUsage.find({ status: 'flagged' }).populate('ngo', 'name').sort({ createdAt: -1 }).limit(10),
+      Donation.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000) }
+          }
+        },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            amount: { $sum: "$amount" },
+            donors: { $addToSet: "$donor" },
+            ngos: { $addToSet: "$ngo" }
+          }
+        },
+        {
+          $project: {
+            month: "$_id",
+            amount: 1,
+            donors: { $size: "$donors" },
+            ngos: { $size: "$ngos" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]),
+      User.countDocuments({
+        role: 'donor',
+        createdAt: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) }
+      })
+    ]);
+
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const formattedMonthlyStats = monthlyStats.map(stat => ({
+      month: monthNames[stat.month - 1],
+      amount: stat.amount,
+      donors: stat.donors,
+      ngos: stat.ngos
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        totalVolume: totalVolumeResult[0]?.total || 0,
+        verifiedNgos,
+        pendingNgos,
+        activeDonors,
+        pendingActions: pendingNgos + pendingPaymentRequests,
+        newDonorsMonth: newDonorsThisMonth,
+        monthlyStats: formattedMonthlyStats,
+        flaggedActivities: recentFlaggedActivities.map(activity => ({
+          id: activity._id,
+          type: 'Flagged Fund Usage',
+          ngo: activity.ngo?.name || 'Unknown NGO',
+          description: activity.title,
+          severity: 'High',
+          date: activity.createdAt,
+          details: activity.description
+        }))
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Get pending NGOs for verification
+export const getPendingNgos = async (req, res) => {
+  try {
+    const ngos = await NGO.find({ status: 'pending' })
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: ngos.map(ngo => ({
+        _id: ngo._id,
+        id: ngo._id,
+        name: ngo.name,
+        email: ngo.contactEmail || ngo.user?.email,
+        applied: ngo.createdAt,
+        documents: ngo.documents?.length || 0,
+        status: 'Pending',
+        category: ngo.category || 'General',
+        country: ngo.country || 'Unknown'
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 // Get dashboard stats
 export const getDashboardStats = async (req, res) => {
@@ -196,9 +307,13 @@ export const approveNgo = async (req, res) => {
 
 export const rejectNgo = async (req, res) => {
   try {
+    const { reason } = req.body;
     const ngo = await NGO.findByIdAndUpdate(
       req.params.id,
-      { status: 'rejected' },
+      { 
+        status: 'rejected',
+        rejectionReason: reason || 'Application did not meet requirements'
+      },
       { new: true }
     );
     if (!ngo) {

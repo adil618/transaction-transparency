@@ -10,14 +10,14 @@ import Link from "next/link";
 
 export default function FeaturesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
       
       <div className="mx-auto max-w-7xl px-6 py-20">
         {/* Hero Section */}
         <div className="text-center mb-20">
-          <h1 className="text-5xl font-bold text-slate-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900">
-            Platform Features
+          <h1 className="text-5xl mb-6">
+            Platform <span className="text-rose-600">Features</span>
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Comprehensive tools and features designed to create transparency, accountability, and measurable impact.
@@ -252,9 +252,9 @@ export default function FeaturesPage() {
 
         {/* Performance Metrics */}
         <section className="mb-20">
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+          <Card className="border-0 shadow-xl bg-rose-600 text-white">
             <CardContent className="p-12">
-              <h2 className="text-3xl font-bold mb-8 text-center">Platform Performance</h2>
+              <h2 className="text-3xl mb-8 text-center">Platform Performance</h2>
               <div className="grid gap-8 md:grid-cols-4 text-center">
                 <div>
                   <Zap className="h-10 w-10 mx-auto mb-3" />
@@ -283,9 +283,9 @@ export default function FeaturesPage() {
 
         {/* CTA Section */}
         <section>
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-slate-900 to-blue-900 text-white">
+          <Card className="border-0 shadow-xl bg-rose-600 text-white">
             <CardContent className="p-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">Experience These Features Today</h2>
+              <h2 className="text-3xl mb-4">Experience These Features Today</h2>
               <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
                 Join thousands of users who trust our platform for transparent, impactful giving.
               </p>
@@ -293,7 +293,7 @@ export default function FeaturesPage() {
                 <Button size="lg" variant="secondary" asChild className="hover:scale-105 transition-all duration-300">
                   <Link href="/signup">Get Started</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white hover:text-slate-900 hover:scale-105 transition-all duration-300">
+                <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white hover:text-rose-600">
                   <Link href="/contact">Contact Sales</Link>
                 </Button>
               </div>
@@ -303,10 +303,10 @@ export default function FeaturesPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12 mt-20">
+      <footer className="bg-gray-900 text-white py-12 mt-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center text-sm text-slate-400">
-            <p>&copy; 2026 Transaction Transparency Platform. All rights reserved.</p>
+          <div className="text-center text-sm text-gray-400">
+            <p>&copy; 2026 DonateTransparently. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -5,14 +5,14 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
       
       <div className="mx-auto max-w-7xl px-6 py-20">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900">
-            About Transaction Transparency
+          <h1 className="text-5xl mb-6">
+            About <span className="text-rose-600">DonateTransparently</span>
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Building a future where every donation creates measurable impact through complete transparency and accountability.
@@ -21,7 +21,7 @@ export default function AboutPage() {
 
         {/* Mission Section */}
         <section className="mb-20">
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+          <Card className="border-0 shadow-xl bg-rose-600 text-white">
             <CardContent className="p-12">
               <h2 className="text-3xl font-bold mb-6 text-center">Our Mission</h2>
               <p className="text-lg text-center max-w-3xl mx-auto leading-relaxed">
@@ -132,11 +132,11 @@ export default function AboutPage() {
           <div className="grid gap-8 md:grid-cols-3">
             <Card className="border-0 shadow-lg text-center">
               <CardContent className="pt-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
+                <div className="w-24 h-24 bg-rose-100 rounded-full mx-auto mb-4 flex items-center justify-center text-rose-600 text-3xl font-bold">
                   JD
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Jane Doe</h3>
-                <p className="text-blue-600 font-medium mb-3">Chief Executive Officer</p>
+                <h3 className="text-xl font-semibold mb-1">Jane Doe</h3>
+                <p className="text-rose-600 font-medium mb-3">Chief Executive Officer</p>
                 <p className="text-slate-600 text-sm">
                   Former technology executive with 15+ years in fintech and social impact ventures.
                 </p>
@@ -145,10 +145,10 @@ export default function AboutPage() {
 
             <Card className="border-0 shadow-lg text-center">
               <CardContent className="pt-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-teal-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
+                <div className="w-24 h-24 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center text-green-600 text-3xl font-bold">
                   MS
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Michael Smith</h3>
+                <h3 className="text-xl font-semibold mb-1">Michael Smith</h3>
                 <p className="text-green-600 font-medium mb-3">Chief Technology Officer</p>
                 <p className="text-slate-600 text-sm">
                   Software architect specializing in blockchain, distributed systems, and secure transactions.
@@ -158,10 +158,10 @@ export default function AboutPage() {
 
             <Card className="border-0 shadow-lg text-center">
               <CardContent className="pt-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
+                <div className="w-24 h-24 bg-purple-100 rounded-full mx-auto mb-4 flex items-center justify-center text-purple-600 text-3xl font-bold">
                   EJ
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Emily Johnson</h3>
+                <h3 className="text-xl font-semibold mb-1">Emily Johnson</h3>
                 <p className="text-purple-600 font-medium mb-3">VP of NGO Relations</p>
                 <p className="text-slate-600 text-sm">
                   20+ years in nonprofit sector development and international development programs.
@@ -173,16 +173,16 @@ export default function AboutPage() {
 
         {/* CTA Section */}
         <section>
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-slate-900 to-blue-900 text-white">
+          <Card className="border-0 shadow-xl bg-rose-600 text-white">
             <CardContent className="p-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">Join Our Mission</h2>
+              <h2 className="text-3xl mb-4">Join Our Mission</h2>
               <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
                 Whether you&apos;re a donor looking to make meaningful impact or an NGO seeking transparency tools, 
                 we&apos;re here to help you create positive change.
               </p>
               <Link 
                 href="/signup" 
-                className="inline-block bg-white text-slate-900 px-8 py-3 rounded-lg font-semibold hover:bg-slate-100 transition-all duration-300 hover:scale-105"
+                className="inline-block bg-white text-rose-600 px-8 py-3 rounded-lg font-semibold hover:bg-rose-50 transition-all duration-300"
               >
                 Get Started Today
               </Link>
@@ -192,7 +192,7 @@ export default function AboutPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center text-sm text-slate-400">
             <p>&copy; 2026 Transaction Transparency Platform. All rights reserved.</p>

@@ -1,29 +1,26 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Heart, User, Building2, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/context/auth-context";
-import Navbar from "@/components/navbar";
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("donor");
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -31,96 +28,138 @@ export default function LoginPage() {
       await login(email, password);
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err?.message || "Login failed");
+      setError(err?.message || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      <Navbar />
-      <div className="flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-lg p-8 shadow-2xl animate-scaleIn">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-blue-600">
-              Welcome back
-            </h1>
-            <p className="mt-2 text-sm text-slate-600">
-              Sign in to continue your journey
-            </p>
-          </div>
-          <form className="space-y-6" onSubmit={onSubmit}>
-            <Field>
-              <FieldLabel htmlFor="email" className="text-slate-700 font-medium">Email</FieldLabel>
-              <InputGroup className="transition-all duration-300 focus-within:scale-[1.02]">
-                <InputGroupAddon align="inline-start">
-                  <MailIcon className="h-4 w-4 text-slate-500" />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="transition-all duration-300"
-                />
-              </InputGroup>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password" className="text-slate-700 font-medium">Password</FieldLabel>
-              <InputGroup className="transition-all duration-300 focus-within:scale-[1.02]">
-                <InputGroupAddon align="inline-start">
-                  <LockIcon className="h-4 w-4 text-slate-500" />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="transition-all duration-300"
-                />
-                <InputGroupAddon
-                  align="inline-end"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="cursor-pointer hover:bg-slate-100 transition-colors duration-200"
-                >
-                  {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                </InputGroupAddon>
-              </InputGroup>
-            </Field>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-blue-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-5xl">
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 mb-4">
+            <Heart className="h-10 w-10 text-rose-600 fill-rose-600" />
+            <span className="text-2xl font-semibold">DonateTransparently</span>
+          </Link>
+          <h1 className="text-3xl mb-2">Welcome Back</h1>
+          <p className="text-gray-600">Sign in to access your dashboard</p>
+        </div>
 
-            {error && (
-              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200 animate-fadeIn">
-                {error}
-              </div>
-            )}
-            <Button 
-              type="submit" 
-              className="w-full transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-r from-slate-900 to-blue-900" 
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  Signing in...
-                </span>
-              ) : (
-                "Login"
-              )}
-            </Button>
-          </form>
-          <div className="mt-6 text-center text-sm text-slate-600">
-            New here?{" "}
-            <Link className="text-blue-600 hover:text-blue-700 font-semibold underline transition-colors duration-300" href="/signup">
-              Create an account
-            </Link>
-          </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsTrigger value="donor" className="gap-2">
+              <User className="h-4 w-4" />
+              Donor
+            </TabsTrigger>
+            <TabsTrigger value="ngo" className="gap-2">
+              <Building2 className="h-4 w-4" />
+              NGO
+            </TabsTrigger>
+            <TabsTrigger value="admin" className="gap-2">
+              <Shield className="h-4 w-4" />
+              Admin
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="donor">
+            <Card>
+              <CardHeader>
+                <CardTitle>Donor Login</CardTitle>
+                <CardDescription>Access your donor dashboard to make donations and track your impact</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="donor-email">Email</Label>
+                    <Input id="donor-email" type="email" placeholder="donor@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="donor-password">Password</Label>
+                    <Input id="donor-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                  </div>
+                  {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">{error}</p>}
+                  <div className="flex items-center justify-between">
+                    <a href="#" className="text-sm text-rose-600 hover:underline">Forgot password?</a>
+                  </div>
+                  <Button type="submit" className="w-full bg-rose-600 hover:bg-rose-700" disabled={loading}>
+                    {loading ? "Signing in..." : "Sign In as Donor"}
+                  </Button>
+                  <p className="text-sm text-center text-gray-600">
+                    Don&apos;t have an account? <Link href="/signup" className="text-rose-600 hover:underline">Sign up</Link>
+                  </p>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ngo">
+            <Card>
+              <CardHeader>
+                <CardTitle>NGO Login</CardTitle>
+                <CardDescription>Access your NGO dashboard to manage campaigns and receive donations</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="ngo-email">Organization Email</Label>
+                    <Input id="ngo-email" type="email" placeholder="contact@ngo.org" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="ngo-password">Password</Label>
+                    <Input id="ngo-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                  </div>
+                  {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">{error}</p>}
+                  <div className="flex items-center justify-between">
+                    <a href="#" className="text-sm text-blue-600 hover:underline">Forgot password?</a>
+                  </div>
+                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
+                    {loading ? "Signing in..." : "Sign In as NGO"}
+                  </Button>
+                  <p className="text-sm text-center text-gray-600">
+                    New organization? <Link href="/signup" className="text-blue-600 hover:underline">Register your NGO</Link>
+                  </p>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="admin">
+            <Card>
+              <CardHeader>
+                <CardTitle>Admin Login</CardTitle>
+                <CardDescription>Access the admin panel to manage the platform</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="admin-email">Admin Email</Label>
+                    <Input id="admin-email" type="email" placeholder="admin@donatetransparently.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="admin-password">Password</Label>
+                    <Input id="admin-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                  </div>
+                  {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">{error}</p>}
+                  <div className="flex items-center justify-between">
+                    <a href="#" className="text-sm text-purple-600 hover:underline">Forgot password?</a>
+                  </div>
+                  <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={loading}>
+                    {loading ? "Signing in..." : "Sign In as Admin"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-8 text-center">
+          <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">
+            â† Back to home
+          </Link>
         </div>
       </div>
     </div>
   );
+
 }
